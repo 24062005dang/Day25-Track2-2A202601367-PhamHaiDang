@@ -14,6 +14,12 @@ def test_break_even():
     assert pricing.break_even_utilization(0.0) == 1.0
 
 
+def test_cache_is_worth_it():
+    assert pricing.cache_is_worth_it(2, 1.0, 0.10) is True
+    assert pricing.cache_is_worth_it(1, 1.0, 0.10) is False
+    assert pricing.cache_is_worth_it(0, 1.0, 0.10) is False
+
+
 def test_recommend_tier():
     assert pricing.recommend_tier(2, True) == "spot"
     assert pricing.recommend_tier(24, False) == "reserved"

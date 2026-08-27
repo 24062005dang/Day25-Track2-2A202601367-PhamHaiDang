@@ -31,6 +31,19 @@ def build_report(baseline_usd: float, optimized_usd: float, levers: dict,
             f"- Carbon per query: {sustainability.get('carbon_g', 0):.3f} gCO2e",
             f"- Cheapest+cleanest region: {sustainability.get('best_region', 'n/a')}",
         ]
+        if "reasoning_cost" in sustainability:
+            reasoning_cost = sustainability["reasoning_cost"]
+            standard_cost = sustainability["standard_cost"]
+            total_cost = reasoning_cost + standard_cost
+            cost_share = reasoning_cost / total_cost * 100 if total_cost else 0.0
+            lines += [
+                "",
+                "## Extension measurements",
+                "",
+                f"- Prompt cache policy: {'enabled' if sustainability.get('cache_enabled') else 'disabled'}; break-even is {sustainability.get('cache_break_even_reads', 0):.2f} reads.",
+                f"- Reasoning traffic: {cost_share:.1f}% of inference cost, {sustainability.get('reasoning_wh', 0):,.1f} Wh.",
+                f"- Standard traffic: {sustainability.get('standard_wh', 0):,.1f} Wh.",
+            ]
     lines += ["", "_Figures are June-2026 as-of snapshots; re-baseline before acting._"]
     return "\n".join(lines)
 

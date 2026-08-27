@@ -52,6 +52,20 @@ def discount_stack(
     return cache_mult * batch_mult
 
 
+def cache_is_worth_it(avg_reads: float, write_cost: float, read_discount: float = 0.10) -> bool:
+    """Return whether caching costs less than paying full price for each read.
+
+    Costs are normalized to one uncached read. The first cache write costs
+    ``write_cost`` and each subsequent read costs ``read_discount``.
+    """
+    if avg_reads <= 0 or write_cost < 0:
+        return False
+    read_discount = max(0.0, min(1.0, read_discount))
+    cached_total = write_cost + avg_reads * read_discount
+    uncached_total = avg_reads
+    return cached_total < uncached_total
+
+
 def break_even_utilization(discount_frac: float) -> float:
     """Utilization at which a commitment pays off ~= 1 - discount.
 

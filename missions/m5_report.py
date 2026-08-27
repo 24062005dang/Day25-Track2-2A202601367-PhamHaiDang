@@ -50,6 +50,12 @@ def run(verbose: bool = True) -> dict:
         "wh_per_query": wh,
         "carbon_g": sustainability.carbon_g(wh, "us-east-1"),
         "best_region": min(sustainability.REGION_CARBON, key=sustainability.REGION_CARBON.get),
+        "cache_enabled": r2["cache_enabled"],
+        "cache_break_even_reads": 1.0 / (1.0 - 0.10),
+        "reasoning_cost": r2["reasoning_cost"],
+        "standard_cost": r2["standard_cost"],
+        "reasoning_wh": r2["reasoning_wh"],
+        "standard_wh": r2["standard_wh"],
     }
 
     md = report.build_report(baseline, optimized, levers, sustainability=sust)
